@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-image: url(img/Rectangle\ 1.png) ;
+            -moz-background-size: 100%; /* Firefox 3.6+ */
+            -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+            -o-background-size: 100%; /* Opera 9.6+ */
+            background-size: 100%; /* Современные браузеры */
+            }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html"> <img class="logo-first" src="img/Ellipse 1.png"></a>
+            <a href="index.html"> <img class="logo-two" src="img/Lorus.png"></a>
+            <a href="index.html"> <img class="logo-three" src="img/crm.png"></a>
+            <a href="index.html"> <img class="logo-four" src="img/Ваш цифровой экспедитор.png"></a>
+        </div>
+    </header>
+        <form id="login-form" method="post" action="php/process_login.php">
+            <input class="login" name="login" type="login" placeholder="Логин">
+            <input class="password" name="password" type="pass" placeholder="Пароль">
+            <input class="but-entrance" type="submit" value="Войти">
+        </form>
+<!--         <script>
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Отменяем стандартное поведение при отправке формы
+
+        const login = document.querySelector('.login').value;
+        const password = document.querySelector('.password').value;
+
+        if (login === '' || password === '') {
+            alert('Заполните все поля'); // Выводим сообщение, если поля не заполнены
+            return;
+        }
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            if (this.status === 200) {
+                if (this.responseText === 'Login success') {
+                    alert(this.responseText); // Выводим сообщение об успешной авторизации
+                } else {
+                    alert('Неправильный логин или пароль'); // Выводим сообщение при неправильном логине или пароле
+                }
+            }
+        };
+        xhttp.open('POST', 'php/process_login.php');
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.send(`login=${login}&password=${password}`);
+    });
+</script> -->
+</body>
+</html>

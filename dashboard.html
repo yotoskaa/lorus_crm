@@ -1,0 +1,662 @@
+<!-- <?php
+session_start();
+$login = $_SESSION['login'];
+// Параметры подключения к базе данных
+$servername = "localhost";
+$username = "nondank5_1";
+$password = "Zxcasd12";
+$dbname = "nondank5_1";
+
+
+// Создаем подключение
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Проверяем соединение
+if ($conn->connect_error) {
+  die("Подключение не удалось: " . $conn->connect_error);
+}
+
+// Запрос SQL для получения значения из базы данных
+
+$sql = "SELECT month as month, SUM(shipping_delivery) as total_quantity FROM indicators GROUP BY month";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+// Проверяем, что запрос вернул результаты
+if ($result->num_rows > 0) {
+  // Создаем строку JavaScript для сохранения значений
+  $js_code = "";
+
+  // Цикл для перебора всех строк результата запроса
+  while($row = $result->fetch_assoc()) {
+    // Создаем переменную с именем login и значением из столбца "login"
+    $js_code .= "var login_" . $row["month"] . " = " . json_encode($row["total_quantity"]) . ";";
+  }
+
+  // Передаем код JavaScript внутри тега script
+  echo "<script>" . $js_code . "</script>";
+} else {
+  echo "В базе данных нет значений.";
+}
+
+// Создаем подключение
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Проверяем соединение
+if ($conn->connect_error) {
+  die("Подключение не удалось: " . $conn->connect_error);
+}
+
+// Запрос SQL для получения значения из базы данных
+
+$sql = "SELECT month as month, SUM(shipment_of_large_loads) as total_quantity FROM indicators GROUP BY month";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+// Проверяем, что запрос вернул результаты
+if ($result->num_rows > 0) {
+  // Создаем строку JavaScript для сохранения значений
+  $js_code = "";
+
+  // Цикл для перебора всех строк результата запроса
+  while($row = $result->fetch_assoc()) {
+    // Создаем переменную с именем login и значением из столбца "login"
+    $js_code .= "var shipment_" . $row["month"] . " = " . json_encode($row["total_quantity"] + $row["total_quantity1"] ) . ";";
+  }
+
+  // Передаем код JavaScript внутри тега script
+  echo "<script>" . $js_code . "</script>";
+} else {
+  echo "В базе данных нет значений.";
+}
+
+
+$sql = "SELECT month as month, SUM(shipping_delivery) as total_quantity,SUM(shipment_of_large_loads) as total_quantity1 FROM indicators GROUP BY month";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+$totalQuantity = 0;
+$totalQuantity1 = 0;
+
+
+// Цикл для прохода по каждой строке результата запроса
+while ($row = $result->fetch_assoc()) {
+    // Проверяем, что текущий месяц январь
+    if ($row['month'] == 'Февраль') {
+        // Складываем значения двух столбцов и записываем в переменную
+        $totalQuantity = $row['total_quantity'] + $row['total_quantity1'];
+        // Прерываем цикл, так как нам нужен только первый найденный январь
+        break;
+    }
+}
+
+while ($row = $result->fetch_assoc()) {
+    // Проверяем, что текущий месяц январь
+    if ($row['month'] == 'Январь') {
+        // Складываем значения двух столбцов и записываем в переменную
+        $totalQuantity1 = $row['total_quantity'] + $row['total_quantity1'];
+        // Прерываем цикл, так как нам нужен только первый найденный январь
+        break;
+    }
+}
+$totalQuantitprocent = round((($totalQuantity  - $totalQuantity1)/$totalQuantity1)*100, 1);
+
+
+
+$sql = "SELECT month as month, SUM(shipping_delivery) as applications,SUM(shipment_of_large_loads) as applications1 FROM applications GROUP BY month";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+$totalapplications = 0;
+$totalapplications1 = 0;
+
+while ($row = $result->fetch_assoc()) {
+    // Проверяем, что текущий месяц январь
+    if ($row['month'] == 'Февраль') {
+        // Складываем значения двух столбцов и записываем в переменную
+        $totalapplications = $row['applications'] + $row['applications1'];
+        // Прерываем цикл, так как нам нужен только первый найденный январь
+        break;
+    }
+}
+
+while ($row = $result->fetch_assoc()) {
+    // Проверяем, что текущий месяц январь
+    if ($row['month'] == 'Январь') {
+        // Складываем значения двух столбцов и записываем в переменную
+        $totalapplications1 = $row['applications'] + $row['applications1'];
+        // Прерываем цикл, так как нам нужен только первый найденный январь
+        break;
+    }
+}
+$totalapplicationsprocent = round((($totalapplications  - $totalapplications1) / $totalapplications1) * 100, 1);
+
+$sql = "SELECT DAY(date), total_income,expenses FROM income WHERE date BETWEEN '2022-05-20' AND '2022-05-26' GROUP BY date";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+  // Создаем строку JavaScript для сохранения значений
+  $income = "";
+
+  // Цикл для перебора всех строк результата запроса
+  while($row = $result->fetch_assoc()) {
+    // Создаем переменную с именем login и значением из столбца "login"
+    $income .= "var compincome_" . $row["DAY(date)"] . " = " . json_encode($row["total_income"] - $row["expenses"] ) . ";";
+  }
+
+  echo "<script>" . $income . "</script>";
+} else {
+  echo "В базе данных нет значений.";
+}
+
+$sql = "SELECT DAY(date), total_income FROM income WHERE date BETWEEN '2022-05-20' AND '2022-05-26' GROUP BY date";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+  // Создаем строку JavaScript для сохранения значений
+  $income1 = "";
+
+
+  // Цикл для перебора всех строк результата запроса
+  while($row = $result->fetch_assoc()) {
+    // Создаем переменную с именем login и значением из столбца "login"
+    $income1 .= "var totincome_" . $row["DAY(date)"] . " = " . json_encode($row["total_income"] ) . ";";
+
+    
+  }
+
+  echo "<script>" . $income1 . "</script>";
+} else {
+  echo "В базе данных нет значений.";
+}
+
+$sql = "SELECT SUM(krasnodar) AS krasnodar_sum, SUM(moscow) AS moscow_sum, SUM(novorossiysk) AS norossiysk_sum, SUM(samara) AS samara_sum, SUM(voronezh) AS voronezh_sum FROM load_analysis";
+
+// Выполняем запрос и сохраняем результат
+$result = $conn->query($sql);
+
+$sum_krasnodar = 0;
+$sum_moscow = 0;
+$sum_novorossiysk = 0;
+$sum_samara = 0;
+$sum_voronezh = 0;
+
+// Цикл для обработки выбранных данных
+while ($row = mysqli_fetch_assoc($result)) {
+    $sum_krasnodar = $row['krasnodar_sum'];
+    $sum_moscow = $row['moscow_sum'];
+    $sum_novorossiysk += $row['norossiysk_sum'];
+    $sum_samara += $row['samara_sum'];
+    $sum_voronezh += $row['voronezh_sum'];
+}
+$conn->close();
+?> -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/board-style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+</head>
+<body>
+  <div class="fon-model">
+    <a href="dashboard.html">
+      <img class="but-home" src="img/logo-home.svg">
+      <img class="fon-but-home" src="img/Rectangle 19.png">
+    </a>
+    <a href="dashboard-task.html">
+      <img class="but-task" src="img/Rectangle 17.png">
+      <img class="but-task2" src="img/Rectangle 17.png">
+    </a>
+
+    <img class="but-model" src="img/Vector2.png" onclick="openModal()"> 
+  </div>
+
+<div id="myModal" class="modal">
+  <div class="logo">
+    <img class="logo-first" src="img/Lorus-dash.png">
+    <img class="logo-two" src="img/crm-dash.png">
+  </div>
+  <img class="but-close" src="img/Vector3.png" onclick="closeModal()">
+  <h2 onclick="closeModal()">Скрыть</h2>
+ 
+    <a href="dashboard.php" ><img class="but-home-model" src="img/logo-home.svg">
+    <h1>Доска</h1>
+    <img class="home-fon" src="img/Rectangle 16.png">
+    </a>
+
+  <a href="dashboard-task.html">
+  <img class="but-task-model" src="img/Rectangle 17.png">
+  <img class="but-task2-model" src="img/Rectangle 18.png">
+  <h3 class="title-highlight">Задачи</h3>
+  </a>
+</div>
+
+  <h4 id="myh4">Доска</h4>
+
+<div id="myborder-top" class="border-top">
+  <div class="line-border-top"></div>  
+  <p class="text-border-top"><?php echo $_SESSION['login']; ?></p>
+  <span id="date"></span>
+</div>
+
+<div id="myborder-graphic" class="border-graphic">
+  <h5>Показатель отгрузок</h5>
+  <div class="border-graphic-line"></div>
+  <div class="graphic">
+    <canvas id="myChart"></canvas>
+  </div>
+  <div class="border-graphic-line2"></div>
+  <div class="graphic2">
+    <canvas id="myChart2"></canvas>
+  </div>
+</div>
+
+
+<div id="myborder-first" class="border-first">
+  <p class="Text-first">Общее количество отгрузок</p>
+  <span class="sum-first"><?php echo $totalQuantity; ?></span>
+  <div id="myDiv" class="sum-procent"><?php echo $totalQuantitprocent; ?>%</div>
+  <img class="graphic-first" src='img/Group 54.svg'>
+  <p class="Text-two">Ожидающие </br>отправки</p>
+  <img class="graphic-first1" src='img/Group 56.svg'>
+  <span class="sum-aplications"><?php echo  $totalapplications; ?></span>
+  <div id="myApp" class="applications-procent"><?php echo $totalapplicationsprocent; ?>%</div>
+</div>
+
+<div id="myborder-two" class="border-two">
+  <p class="text-border-two">Анализ нагрузок</p>
+  <div class="line-border-two"></div>
+  <div class="graphic-border-two">
+    <p class="Moscow-text">Москва</p>
+    <p class="Krasnodar-text">Краснодар</p>
+    <p class="Novorossisk-text">Новороссийск</p>
+    <p class="Samara-text">Самара</p>
+    <p class="Voronezh-text">Воронеж</p>
+    <canvas id="myChart-two" width="200" height="300"></canvas>
+  </div>
+</div>
+
+<div id="myborder-three" class="border-three">
+  <p class="text-three">Обзор доходов</p>
+  <div class="border-line-three"></div>
+  <div class="graphic-three">
+    <canvas id="myChart-three"></canvas>
+  </div>
+
+</div>
+
+
+<div id="myborder-four" class="border-four">
+  <p class="text-border-four">История Транзакций</p>
+  <div class="line-border-four"></div>
+  <div class="border-four-style-text">
+    <p class="loading-text">Загрузка#</p>
+    <p class="driver-text">Водитель</p>
+    <p class="date-text">Дата</p>
+    <p class="payment-text">Тип оплаты</p>
+    <p class="profit-text">Прибыль</p>
+    </div>
+    <div class="line2-border-four"></div>
+    <div class="line3-border-four"></div>
+    <div class="line4-border-four"></div>
+    <div class="table-border-four">
+        <?php
+        // подключение к базе данных
+        $db = mysqli_connect('localhost', 'nondank5_1', 'Zxcasd12', 'nondank5_1');
+        // запрос на выборку данных из таблицы transaction_history
+        $query = "SELECT * FROM transaction_history WHERE 4";
+        $result = mysqli_query($db, $query);
+
+        echo "<table>";
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $row['loading'] . "</td>";
+            echo "<td>" . $row['driver'] . "</td>";
+            echo "<td>" . $row['date'] . "</td>";
+            echo "<td>" . $row['payment_type'] . "</td>";
+            echo "<td>" . $row['profit'] . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        // конец блока div
+        echo "</div>";
+        ?>
+    </div>
+</div>
+
+<script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+
+  // Данные для графика
+  var data = {
+   labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь'],
+   datasets: [{
+    label: 'Отгрузка доставки',
+    data: [],
+    backgroundColor: 'rgba(0, 133, 255, 0.19)',
+             borderColor: '#0085FF',
+   }]
+  };
+
+  // Настройки графика
+  var options = {
+   responsive: true,
+   maintainAspectRatio: false,
+   scales: {
+    xAxes: [{
+     ticks: {
+      display: false,
+     },
+     gridLines: {
+      display: false,
+      drawOnChartArea: false
+     }
+    }],
+    yAxes: [{
+     ticks: {
+      display: false,
+      beginAtZero: true
+     },
+     gridLines: {
+        display: false,
+        drawOnChartArea: false
+      }
+    }]
+  },
+  legend: {
+    display: false
+   }
+  };
+data.datasets[0].data.push(login_Январь);
+data.datasets[0].data.push(login_Февраль);
+data.datasets[0].data.push(login_Март);
+data.datasets[0].data.push(login_Апрель);
+data.datasets[0].data.push(login_Май);
+data.datasets[0].data.push(login_Июнь);
+
+  // Создание графика
+  var myChart = new Chart(ctx, {
+   type: 'line',
+   data: data,
+   options: options
+  });
+ </script>
+
+<script>
+  var ctx = document.getElementById('myChart2').getContext('2d');
+
+  // Данные для графика
+  var data = {
+   labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май','login_1'],
+   datasets: [{
+    label: 'Отгрузка больших грузов',
+    data: [],
+    backgroundColor: 'rgba(255, 168, 0, 0.19)',
+             borderColor: '',
+   }]
+  };
+
+  // Настройки графика
+  var options = {
+   responsive: true,
+   maintainAspectRatio: false,
+   scales: {
+    xAxes: [{
+     ticks: {
+      display: false,
+     },
+     gridLines: {
+      display: false,
+      drawOnChartArea: false
+     }
+    }],
+    yAxes: [{
+     ticks: {
+      display: false,
+      beginAtZero: true,
+      reverse: true
+     },
+     gridLines: {
+        display: false,
+        drawOnChartArea: false
+      }
+    }]
+  },
+  legend: {
+    display: false
+   }
+  };
+  data.datasets[0].data.push(shipment_Январь);
+  data.datasets[0].data.push(shipment_Февраль);
+  data.datasets[0].data.push(shipment_Март);
+  data.datasets[0].data.push(shipment_Апрель);
+  data.datasets[0].data.push(shipment_Май);
+  data.datasets[0].data.push(shipment_Июнь);
+  // Создание графика
+  var myChart = new Chart(ctx, {
+   type: 'line',
+   data: data,
+   options: options
+  });
+ </script>
+
+<script>
+
+function openModal() {
+  document.getElementById("myModal").style.display = "block";
+  document.getElementById("myh4").style.left = "19%";
+  document.getElementById("myborder-top").style.right = "5%";
+  document.getElementById("myborder-three").style.left = "19%";
+  document.getElementById("myborder-graphic").style.left = "19%";
+  document.getElementById("myborder-first").style.left = "61%";
+  document.getElementById("myborder-two").style.right = "5%";
+  document.getElementById("myborder-four").style.left = "61%";
+  
+}
+
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
+  document.getElementById("myh4").style.left = "15%";
+  document.getElementById("myborder-top").style.right = "8%";
+  document.getElementById("myborder-three").style.left = "15%";
+  document.getElementById("myborder-graphic").style.left = "15%";
+  document.getElementById("myborder-first").style.left = "57.6%";
+  document.getElementById("myborder-two").style.right = "8%";
+  document.getElementById("myborder-four").style.left = "57.6%";
+
+}
+
+</script>
+
+<script>
+var myDiv = document.getElementById("myDiv");
+
+
+  // Задаем значение переменной r
+var r = "<?php echo $totalQuantitprocent; ?>";
+
+  // Проверяем значение переменной и устанавливаем нужный цвет фона
+if (r > 0) {
+ myDiv.style.color = "green";
+ sumProcent.style.color = "white";
+} else if (r == 0) {
+ myDiv.style.color = "grey";
+ sumProcent.style.color = "grey";
+} else {
+ myDiv.style.color = "red";
+ sumProcent.style.color = "white";
+}
+</script>
+
+<script>
+var myApp = document.getElementById("myApp");
+
+  // Задаем значение переменной r
+var r = "<?php echo $totalapplicationsprocent; ?>";
+
+  // Проверяем значение переменной и устанавливаем нужный цвет фона
+if (r > 0) {
+ myApp.style.color = "green";
+
+} else if (r == 0) {
+ myApp.style.color = "grey";
+
+} else {
+ myApp.style.color = "red";
+
+}
+
+</script>
+
+<script>
+  var ctx = document.getElementById('myChart-three').getContext('2d');
+
+  // Данные для графика
+  var data = {
+labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+datasets: [{
+label: 'Общий',
+backgroundColor: '#03CD17',
+borderColor: '#03CD17',
+borderWidth: 1,
+hoverBackgroundColor: 'rgba(255, 99, 132, 0.4)',
+hoverBorderColor: 'rgba(255,99,132,1)',
+data: [],
+barThickness: 4 
+},
+{
+label: 'Компании',
+backgroundColor: '#779DFF',
+borderColor: '#779DFF',
+borderWidth: 1,
+hoverBackgroundColor: 'rgba(52, 58, 64, 0.4)',
+hoverBorderColor: 'rgba(52, 58, 64, 1)',
+data: [],
+barThickness: 4 
+}]
+};
+data.datasets[0].data.push(totincome_20);
+data.datasets[0].data.push(totincome_21);
+data.datasets[0].data.push(totincome_22);
+data.datasets[0].data.push(totincome_23);
+data.datasets[0].data.push(totincome_24);
+data.datasets[0].data.push(totincome_25);
+data.datasets[0].data.push(totincome_26);
+data.datasets[1].data.push(compincome_20);
+data.datasets[1].data.push(compincome_21);
+data.datasets[1].data.push(compincome_22);
+data.datasets[1].data.push(compincome_23);
+data.datasets[1].data.push(compincome_24);
+data.datasets[1].data.push(compincome_25);
+data.datasets[1].data.push(compincome_26);
+  // Создание графика
+  var myChart = new Chart(ctx, {
+   type: 'bar',
+   data: data,
+   options: {
+      responsive: true,
+   maintainAspectRatio: false,
+scales: {
+xAxes: [{
+  ticks: {
+    fontFamily: 'Raleway',
+    fontSize: 16,
+    fontColor: '#000000'
+  },
+  gridLines: {
+      display: false,
+      drawOnChartArea: false
+     }
+}],
+yAxes: [{
+  ticks: {
+    fontFamily: 'Raleway',
+    fontSize: 16,
+    fontHeight:19,
+    fontWeight: 500,
+    fontColor: '#000000'
+  }
+}]
+}
+}
+});
+ </script>
+    <script>
+      const daysOfWeek = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+      const monthsOfYear = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+      
+      function updateDate() {
+        const currentDate = new Date();
+        const currentDayOfWeek = daysOfWeek[currentDate.getDay()];
+        const currentMonth = monthsOfYear[currentDate.getMonth()];
+        const currentDayOfMonth = currentDate.getDate();
+        const currentYear = currentDate.getFullYear();
+        const formattedDate = `${currentDayOfWeek}<br>${currentDayOfMonth} ${currentMonth}, ${currentYear}`;
+        document.getElementById('date').innerHTML = formattedDate;
+      }
+      
+      // Обновляем дату каждую секунду
+      setInterval(updateDate, 1000);
+    </script>
+    <script>
+var ctx = document.getElementById('myChart-two').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+        labels: ['Krasnodar', 'Moscow', 'Novorossiysk', 'Samara', 'Voronezh'],
+        datasets: [{
+            label: 'Dataset 1',
+            backgroundColor: ['#FF0000', '#C50000', '#ED5500', '#FFB800', '#FFEB3A'],
+            data: [<?php echo $sum_krasnodar . ", " . $sum_moscow . ", " . $sum_novorossiysk . ", " . $sum_samara . ", " . $sum_voronezh; ?>]
+        }]
+    },
+    options: {
+        legend: {
+            display: false
+        },
+        title: {
+            display: true,
+        },
+        scales: {
+            xAxes: [{
+                display: false,
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    display: false,
+                    fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                    fontSize: 14,
+                    fontColor: '#222',
+                    reverse: false,
+                    position: 'top'
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false
+                },
+                barPercentage: 0.1
+            }]
+        }
+    }
+});
+  </script>
+    
+</body>
+</html>

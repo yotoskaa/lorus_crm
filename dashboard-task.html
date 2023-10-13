@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/board-style.css">
+</head>
+<body>
+  <div class="fon-model">
+    <a href="dashboard.php"><img class="but-home" src="img/logo-home.svg"></a>
+    <a href="dashboard-task.html">
+      <img class="fon-but-task" src="img/Rectangle 19.png">
+      <img class="but-task" src="img/Rectangle 17.png">
+      <img class="but-task2" src="img/Rectangle 17.png">
+    </a>
+    <img class="but-model" src="img/Vector2.png" onclick="openModal()">
+  </div>
+
+<div id="myModal" class="modal">
+  <div class="logo">
+    <img class="logo-first" src="img/Lorus-dash.png">
+    <img class="logo-two" src="img/crm-dash.png">
+  </div>
+  <img class="but-close" src="img/Vector3.png" onclick="closeModal()">
+  <h2 onclick="closeModal()">Скрыть</h2>
+ 
+    <a href="dashboard.php" ><img class="but-home-model" src="img/logo-home.svg">
+    <h1>Доска</h1>
+    </a>
+
+  <a href="dashboard-task.html">
+    <img class="task-fon" src="img/Rectangle 16.png">
+  <img class="but-task-model" src="img/Rectangle 17.png">
+  <img class="but-task2-model" src="img/Rectangle 18.png">
+  <h3 class="title-highlight">Задачи</h3>
+  </a>
+
+</div>
+<script>
+
+function openModal() {
+  document.getElementById("myModal").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
+}
+
+</script>
+</body>
+</html>

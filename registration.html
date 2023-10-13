@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+   <style>
+    *{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+body{
+    background-image: url(img/Rectangle\ 1.png);
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+  </style>
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html"> <img class="logo-first" src="img/Ellipse 1.png"></a>
+            <a href="index.html"> <img class="logo-two" src="img/Lorus.png"></a>
+            <a href="index.html"> <img class="logo-three" src="img/crm.png"></a>
+            <a href="index.html"> <img class="logo-four" src="img/Ваш цифровой экспедитор.png"></a>
+        </div>
+    </header>
+        <form id="user-form" method="post" action="php/add_user.php">
+            <input class="name" name="first_name" type="name" placeholder="Имя">
+            <input class="fname" name="last_name" type="name" placeholder="Фамилия">
+            <input class="tel" name="phone_number" type="tel" placeholder="+7">
+            <input class="registration-but" type="submit" value="Далее">
+        </form>
+        <script>
+            const form = document.getElementById('user-form');
+            form.addEventListener('submit', function(event) {
+                // Отменяем стандартное поведение при отправке формы
+                event.preventDefault();
+        
+                // Получаем данные из полей формы
+                const firstName = document.querySelector('.name').value.trim();
+                const lastName = document.querySelector('.fname').value.trim();
+                const phoneNumber = document.querySelector('.tel').value.trim();
+        
+                // Проверяем, что все поля заполнены
+                if (!firstName || !lastName || !phoneNumber) {
+                    alert('Заполните все поля'); // Выводим сообщение, если поля не заполнены
+                    return;
+                }
+        
+                // Отправляем данные формы на сервер
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    if (this.status === 200) {
+                        // Редиректим на следующую страницу
+                        window.location.href = 'http://nondank5.beget.tech/registration2.html';
+                    } else {
+                        alert('Ошибка при отправке формы');
+                    }
+                };
+                xhttp.open('POST', 'php/add_user.php');
+                xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhttp.send(`first_name=${firstName}&last_name=${lastName}&phone_number=${phoneNumber}`);
+            });
+        </script>
+</body>
+</html>
